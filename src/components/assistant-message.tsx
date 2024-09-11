@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+
+import ReactMarkdown from "react-markdown";
 
 
-export default function AssistantMessage({children}:{children:ReactNode}) {
+export default function AssistantMessage({message}:{message:string}) {
     return (
-        <p className="mb-6">{children}</p>
+        <ReactMarkdown>{message}</ReactMarkdown>
     );
   }
   

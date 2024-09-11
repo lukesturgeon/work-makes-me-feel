@@ -6,15 +6,27 @@ import { Textarea } from "@/components/ui/textarea";
 import UserMessage from "@/components/user-message";
 import AssistantMessage from "@/components/assistant-message";
 
-export default function Page() {
+
+import { redirect } from 'next/navigation'
+
+import { createClient } from '@/lib/supabase/server'
+
+export default async function Page() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }  
+
   return (
-    <main className="bg-muted flex-1 flex">
+    <main className=" flex-1 flex">
 
       <div className="flex-1 flex flex-col max-w-prose mx-auto justify-between gap-6 p-6">
 
         <div className="text-sm">
 
-          <UserMessage>Hello, how are you?</UserMessage>
+          <UserMessage>Hello {data.user.email}, how are you?</UserMessage>
 
           <AssistantMessage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec tellus non arcu viverra rutrum ac sed lorem. Phasellus vel porta metus. Quisque feugiat enim est, ut tincidunt ligula blandit id. Suspendisse sagittis neque eget maximus elementum. Sed rutrum nibh vitae lectus bibendum, non vehicula ligula tincidunt. Etiam viverra tortor ac consectetur gravida. Ut scelerisque metus sit amet justo eleifend, et ullamcorper leo faucibus. Quisque in elit ut metus ultrices finibus ac nec tortor.</AssistantMessage>
 

@@ -1,39 +1,37 @@
-import Link from "next/link"
+import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import "./globals.css";
+import UserNav from "@/components/user-nav";
+import Nav from "@/components/nav";
 
 export const metadata: Metadata = {
   title: "Work Makes Me Feel"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const { data } = await supabase.auth.getSession();  
+
   return (
     <html lang="en">
+
       <body
         className="antialiased flex flex-col min-h-screen"
       >
 
         <header className="sticky top-0 flex h-16 items-center gap-6 border-b bg-background px-6 ">
 
-          <nav className="w-full gap-6 font-medium flex flex-row text-sm justify-between">
-            <Link
-              href="/chat"
-              className="text-foreground transition-colors hover:text-foreground font-bold"
-            >
-              Work Makes Me Feel
-            </Link>
+          {data.session && (
+            <UserNav />
+          )}
 
-            <Link
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Logout
-            </Link>
-          </nav>
+          {!data.session && (
+            <Nav />
+          )}        
 
         </header>
 

@@ -10,7 +10,7 @@ export default function Nav() {
                     href="/"
                     className="text-foreground transition-colors font-bold"
                 >
-                    Work Makes Me Feel
+                    WMMF
                 </Link>
 
             </div>

@@ -10,7 +10,7 @@ export default function UserNav() {
                     href="/chat"
                     className="text-foreground transition-colors font-bold"
                 >
-                    Work Makes Me Feel
+                    WMMF
                 </Link>
 
             </div>

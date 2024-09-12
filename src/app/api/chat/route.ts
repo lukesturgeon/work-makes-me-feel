@@ -1,3 +1,5 @@
+
+
 import { getUserEntries } from '@/lib/actions/entries';
 import { openai } from '@ai-sdk/openai';
 import { convertToCoreMessages, streamText, tool } from 'ai';
@@ -6,6 +8,9 @@ import { z } from 'zod';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
+
+// Ensure all server-rendered routes use the Cloudflare Edge Runtime
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();

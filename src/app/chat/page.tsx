@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Chat from "@/components/chat";
 
+export const runtime = 'edge';
+
 export default async function Page() {
   const supabase = createClient()
 

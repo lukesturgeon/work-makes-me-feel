@@ -62,7 +62,7 @@ export default function AssistantAddEntry({
 
     setState(STATE_FINISHED);
 
-    console.log(result);    
+    console.log("addUserEntry result", result);    
 
     addToolResult({
       toolCallId: toolInvocation.toolCallId,

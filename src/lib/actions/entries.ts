@@ -28,7 +28,7 @@ export const addUserEntry = async ({
     doing: doing,
     feeling: feeling,
     weather: weather,
-    embedding: embedding,
+    embedding: JSON.stringify(embedding),
   });
 
   if (error) {

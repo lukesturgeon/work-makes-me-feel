@@ -41,7 +41,7 @@ export default function AssistantAddEntry({
   async function handleSaveEntry() {
     setState(STATE_SAVING);
 
-    let weather : string = null;
+    const weather : string|null = null;
 
     try {
       const position = await getPosition();

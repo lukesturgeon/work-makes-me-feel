@@ -5,27 +5,32 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Tables } from '@/lib/supabase/types'
+import { useState } from "react";
 
 export default function AssistantGetEntries({
     toolInvocation,
 }: {
     toolInvocation: ToolInvocation;
 }) {
+
+    const [entries, setEntries] = useState<Tables<"entries">[]>();
+
+    if ('result' in toolInvocation) {
+        setEntries(toolInvocation.result);
+    }
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Fetching entries</CardTitle>
             </CardHeader>
             <CardContent>
-                {('result' in toolInvocation) && (
-                    <ol>
-
-                        {toolInvocation.result.map((entry, i: number) => (
-                            <li key={i}>{entry.doing}, {entry.feeling}</li>
-                        ))}
-
-                    </ol>
-                )}
+                <ol>
+                    {entries && entries.map((entry:Tables<"entries">, i: number) => (
+                        <li key={i}>{entry.doing}, {entry.feeling}</li>
+                    ))}
+                </ol>
             </CardContent>
         </Card>
     );

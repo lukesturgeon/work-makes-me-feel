@@ -1,12 +1,7 @@
 import { ToolInvocation } from "ai";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import { Tables } from '@/lib/supabase/types'
 import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function AssistantGetEntries({
     toolInvocation,
@@ -23,15 +18,19 @@ export default function AssistantGetEntries({
     }, [toolInvocation]);
 
     return (
+
         <Card>
             <CardHeader>
-                <CardTitle>Fetching entries</CardTitle>
+                <CardTitle>Tool: {toolInvocation.toolName}</CardTitle>
             </CardHeader>
             <CardContent>
-                <ol>
+                <details>
+                    <summary>Results</summary>
                     {JSON.stringify(entries)}
-                </ol>
+                </details>
             </CardContent>
         </Card>
+
+
     );
 }

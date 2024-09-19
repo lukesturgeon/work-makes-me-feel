@@ -14,7 +14,7 @@ export default function AssistantTool({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{toolInvocation.toolName}</CardTitle>        
+        <CardTitle>Tool: {toolInvocation.toolName}</CardTitle>        
       </CardHeader>
       <CardContent>
         <p className="">{JSON.stringify(toolInvocation.args)}</p>

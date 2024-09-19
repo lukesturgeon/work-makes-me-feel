@@ -6,7 +6,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Tables } from '@/lib/supabase/types'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AssistantGetEntries({
     toolInvocation,
@@ -16,9 +16,11 @@ export default function AssistantGetEntries({
 
     const [entries, setEntries] = useState<Tables<"entries">[]>();
 
-    if ('result' in toolInvocation) {
-        setEntries(toolInvocation.result);
-    }
+    useEffect(() => {
+        if ('result' in toolInvocation) {
+            setEntries(toolInvocation.result);
+        }
+    }, [toolInvocation]);
 
     return (
         <Card>
@@ -27,9 +29,7 @@ export default function AssistantGetEntries({
             </CardHeader>
             <CardContent>
                 <ol>
-                    {entries && entries.map((entry:Tables<"entries">, i: number) => (
-                        <li key={i}>{entry.doing}, {entry.feeling}</li>
-                    ))}
+                    {JSON.stringify(entries)}
                 </ol>
             </CardContent>
         </Card>

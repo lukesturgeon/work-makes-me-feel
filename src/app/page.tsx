@@ -1,11 +1,22 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import Chat from "@/components/chat";
 
 export const runtime = 'edge';
 
-export default function Home() {
+export default async function Page() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }
+
   return (
-    <main className="flex-1 flex items-center justify-center">
-      
-      <h1 className="scroll-m-20 text-4xl uppercase tracking-tight lg:text-5xl">Work Makes Me Feel</h1>
+    <main className=" flex-1 flex">
+
+      <Chat />
+
     </main>
   );
 }

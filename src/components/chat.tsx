@@ -17,8 +17,8 @@ export default function Chat() {
   });
 
   return (
-    <div className="flex flex-col w-full max-w-prose pt-24 pb-48 mx-auto stretch">
-      <div className="space-y-6 text-sm">
+    <div className="flex flex-col w-full max-w-prose mx-auto stretch">
+      <div className="space-y-6 p-6 text-sm">
         {messages.map((m: Message) => (
           <div key={m.id}>
             {m.role == "user" && <UserMessage >{m.content}</UserMessage>}
@@ -45,30 +45,32 @@ export default function Chat() {
         ))}
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="fixed bottom-0 w-full max-w-prose p-2 mb-8 border rounded shadow-xl bg-background focus-within:ring-1 focus-within:ring-ring"
-      >
-        <Label htmlFor="message" className="sr-only">
-          Message
-        </Label>
-        <input
-          // className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
-          className="w-full text-sm outline-none px-2 mb-2"
-          placeholder="Say something..."
-          id="message"
-          value={input}
-          onChange={handleInputChange}
-        />
-        <div className="flex items-center p-2 pt-0">
-          <Button type="submit" size="sm" className="ml-auto gap-1.5">
-            Send Message
-            <span className="flex flex-row">
-              <CornerDownLeft className="size-3.5" />
-            </span>
-          </Button>
-        </div>
-      </form>
+      <div className="fixed bottom-0 w-full p-6">
+        <form
+          onSubmit={handleSubmit}
+          className=" max-w-prose p-2 border rounded shadow-xl bg-background focus-within:ring-1 focus-within:ring-ring"
+        >
+          <Label htmlFor="message" className="sr-only">
+            Message
+          </Label>
+          <input
+            // className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
+            className="w-full text-sm outline-none px-2 mb-2"
+            placeholder="Say something..."
+            id="message"
+            value={input}
+            onChange={handleInputChange}
+          />
+          <div className="flex items-center p-2 pt-0">
+            <Button type="submit" size="sm" className="ml-auto gap-1.5">
+              Send Message
+              <span className="flex flex-row">
+                <CornerDownLeft className="size-3.5" />
+              </span>
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

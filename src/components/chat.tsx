@@ -13,12 +13,20 @@ import AssistantGetEntries from "@/components/assistant-get-entries";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, addToolResult } = useChat({
+    initialMessages: [
+      {
+        role: "assistant",
+        content: "What are you doing, and how are you feeling?",
+        id: ""
+      },
+    ],
     maxToolRoundtrips: 2,
   });
 
   return (
     <div className="flex flex-col w-full max-w-prose mx-auto stretch">
       <div className="space-y-6 p-6 text-sm">
+        
         {messages.map((m: Message) => (
           <div key={m.id}>
             {m.role == "user" && <UserMessage >{m.content}</UserMessage>}

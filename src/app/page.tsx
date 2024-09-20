@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Chat from "@/components/chat";
+import DataViz from '@/components/data-viz';
 
-export const runtime = 'edge';
+
 
 export default async function Page() {
   const supabase = createClient()
@@ -13,10 +14,21 @@ export default async function Page() {
   }
 
   return (
-    <main className=" flex-1 flex">
 
-      <Chat />
+    <div className='flex'>
 
-    </main>
+      <main className='w-full lg:w-1/2 lg:max-w-prose h-screen flex flex-col'>
+
+        <Chat />
+
+      </main>
+
+      <aside className='hidden lg:block flex-grow h-screen bg-gray-500'>
+
+        <DataViz />
+
+      </aside>
+
+    </div>
   );
 }

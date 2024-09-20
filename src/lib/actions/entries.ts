@@ -7,11 +7,9 @@ import { createClient } from "@/lib/supabase/server";
 export const addUserEntry = async ({
   doing,
   feeling,
-  weather,
 }: {
   doing: string;
   feeling: string;
-  weather: string | null;
 }) => {
   
   // create the entry text in a useful format
@@ -27,7 +25,6 @@ export const addUserEntry = async ({
   const { error } = await supabase.from("entries").insert({
     doing: doing,
     feeling: feeling,
-    weather: weather,
     sentiment_score: sentiment.score,
     embedding: JSON.stringify(embedding),
   });
@@ -44,8 +41,7 @@ export const getUserEntries = async () => {
     const supabase = createClient();
     const { data, error } = await supabase.from("entries").select(`
         doing,
-        feeling,
-        weather`);
+        feeling`);
 
     if (error) {
       return error.message;

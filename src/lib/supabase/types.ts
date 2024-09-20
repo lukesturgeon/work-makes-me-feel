@@ -18,7 +18,6 @@ export type Database = {
           id: number
           sentiment_score: number | null
           user_id: string | null
-          weather: string | null
         }
         Insert: {
           created_at?: string
@@ -28,7 +27,6 @@ export type Database = {
           id?: number
           sentiment_score?: number | null
           user_id?: string | null
-          weather?: string | null
         }
         Update: {
           created_at?: string
@@ -38,7 +36,6 @@ export type Database = {
           id?: number
           sentiment_score?: number | null
           user_id?: string | null
-          weather?: string | null
         }
         Relationships: []
       }

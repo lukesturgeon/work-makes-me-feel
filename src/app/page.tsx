@@ -17,17 +17,17 @@ export default async function Page() {
 
     <div className='flex'>
 
-      <main className='w-full lg:w-1/2 lg:max-w-prose h-screen flex flex-col'>
-
-        <Chat />
-
-      </main>
-
-      <aside className='hidden lg:block flex-grow h-screen bg-gray-500'>
+      <aside className='fixed hidden lg:block w-1/2 flex-grow h-screen bg-primary text-primary-foreground '>
 
         <DataViz />
 
       </aside>
+
+      <main className='lg:ml-auto w-full lg:w-1/2 min-h-screen'>
+
+        <Chat />
+
+      </main>
 
     </div>
   );

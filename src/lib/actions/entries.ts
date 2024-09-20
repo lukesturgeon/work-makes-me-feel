@@ -13,13 +13,13 @@ export const addUserEntry = async ({
   feeling: string;
   weather: string | null;
 }) => {
-  // get vector embedding from OpenAI
+  
+  // create the entry text in a useful format
   const entryText = `Doing: ${doing}\nFeeling:${feeling}`;
+  
+  const embedding = await getEmbedding(entryText);
 
-  const { embedding } = await embed({
-    model: openai.embedding("text-embedding-ada-002"),
-    value: entryText,
-  });
+  const sentiment = getSentiment(entryText);
 
   // connect to supabase and save all the data
   const supabase = createClient();
@@ -28,6 +28,7 @@ export const addUserEntry = async ({
     doing: doing,
     feeling: feeling,
     weather: weather,
+    sentiment_score: sentiment.score,
     embedding: JSON.stringify(embedding),
   });
 
@@ -58,3 +59,26 @@ export const getUserEntries = async () => {
     }
   }
 };
+
+function getEmbedding(entryText: string) {
+  return new Promise(async (resolve) => {
+    const { embedding } = await embed({
+      model: openai.embedding("text-embedding-ada-002"),
+      value: entryText,
+    });
+
+    resolve(embedding);
+  });
+}
+
+function getSentiment(entryText: string) {
+  // strip the word 'feeling' from the text because it affects the sentiment analysis
+  const strippedText = entryText.toLowerCase().replace(/feeling/g, "");
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const Sentiment = require("sentiment");
+  const sentiment = new Sentiment();
+  const result = sentiment.analyze(strippedText);
+
+  return result;
+}

@@ -16,6 +16,7 @@ export type Database = {
           embedding: string | null
           feeling: string | null
           id: number
+          sentiment_score: number | null
           user_id: string | null
           weather: string | null
         }
@@ -25,6 +26,7 @@ export type Database = {
           embedding?: string | null
           feeling?: string | null
           id?: number
+          sentiment_score?: number | null
           user_id?: string | null
           weather?: string | null
         }
@@ -34,6 +36,7 @@ export type Database = {
           embedding?: string | null
           feeling?: string | null
           id?: number
+          sentiment_score?: number | null
           user_id?: string | null
           weather?: string | null
         }

@@ -1,23 +1,20 @@
 "use client";
 
 import { Message, useChat } from "ai/react";
-import { CornerDownLeft } from "lucide-react";
+import { CornerDownLeft, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UserMessage from "@/components/user-message";
 import AssistantMessage from "@/components/assistant-message";
 import AssistantTool from "@/components/assistant-tool";
 import AssistantAddEntry from "@/components/assistant-add-entry";
+import { useState } from "react";
 
 
 export default function Chat() {
+
+const [isThinking, setIsThinking] = useState(false);
+
   const { messages, input, handleInputChange, handleSubmit, addToolResult } = useChat({
-    initialMessages: [
-      // {
-      //   role: "assistant",
-      //   content: "What are you doing, and how are you feeling?",
-      //   id: ""
-      // },
-    ],
     maxToolRoundtrips: 2,
     onToolCall({ toolCall, }) {
       if (toolCall.toolName === "getEntries") {
@@ -27,15 +24,19 @@ export default function Chat() {
         }
       }
     },
-    onResponse(response: Response) {
-      console.log("response", response);
-
+    onResponse() {
+      setIsThinking(false);
     }
   });
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsThinking(true);
+    handleSubmit();
+  }
+
   return (
     <div className="flex flex-col h-full">
-
 
       <div className="space-y-6 p-6 flex-grow overflow-y-scroll">
 
@@ -52,17 +53,22 @@ export default function Chat() {
                 <AssistantAddEntry toolInvocation={m.toolInvocations[0]} addToolResult={addToolResult} />
               )}
 
-            {m?.toolInvocations &&
-              m.toolInvocations[0].toolName !== "addEntry" && m.toolInvocations[0].toolName !== 'getEntries' && (
+            {/* {m?.toolInvocations &&
+              m.toolInvocations[0].toolName !== "addEntry" && (
                 <AssistantTool toolInvocation={m.toolInvocations[0]} />
-              )}
+              )} */}
           </div>
         ))}
+
+        {isThinking && <div >
+          <LoaderCircle className="animate-spin mr-2" />
+        </div>}
+
       </div>
 
       <div className="p-6">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           className="p-2 border rounded shadow-xl bg-background focus-within:ring-1 focus-within:ring-ring"
         >
           <div className="flex items-center p-2 gap-2">

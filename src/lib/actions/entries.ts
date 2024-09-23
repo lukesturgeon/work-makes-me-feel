@@ -11,10 +11,9 @@ export const addUserEntry = async ({
   doing: string;
   feeling: string;
 }) => {
-  
   // create the entry text in a useful format
   const entryText = `Doing: ${doing}\nFeeling:${feeling}`;
-  
+
   const embedding = await getEmbedding(entryText);
 
   const sentiment = getSentiment(entryText);
@@ -36,23 +35,39 @@ export const addUserEntry = async ({
   return "Entry Saved.";
 };
 
-export const getUserEntries = async () => {
+export const getUserEntries = async (startDateStr: string, endDateStr: string) => {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+  endDate.setHours(23, 59, 59, 999);
+
   try {
     const supabase = createClient();
-    const { data, error } = await supabase.from("entries").select(`
-        doing,
-        feeling`);
+
+    // Get the logged in user with the current existing session
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("No user found");
+
+    // Get this user’s entries
+    const { data, error } = await supabase
+      .from("entries")
+      .select(
+        `doing, feeling, created_at, sentiment_score`
+      )
+      .eq("user_id", user.id)
+      .gte("created_at", startDate.toISOString())
+      .lte("created_at", endDate.toISOString())
+      .order("created_at", { ascending: false });
 
     if (error) {
+      console.error('error', error);      
       return error.message;
-    }
+    }    
 
     return data;
-
-  } catch (e) {
-    if (e instanceof Error) {
-      return "There was an error: " + e.message;
-    }
+  } catch (e: unknown) {
+    return "There was an error: " + (e as Error).message;
   }
 };
 

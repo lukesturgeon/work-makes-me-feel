@@ -13,13 +13,21 @@ export async function POST(req: Request) {
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
-    system: `You offer insights about how a user feels about their workday.
-    You do not offer advice.
-    You use tool calls to access and analyze data about the user from a database.
-    You know about the work a user is doing, and how they are feeling, and their sentiment.
-    You also know about environmental factors such as time of day and weather at that time.
-    You use the users own words to describe what they are doing and feeling.
-    You always answer is succinct sentances.`,
+    // system: `You offer insights about how a user feels about their workday.
+    // You do not offer advice.
+    // You use tool calls to access and analyze data about the user from a database.
+    // You know about the work a user is doing, and how they are feeling, and their sentiment.
+    // You also know about environmental factors such as time of day and weather at that time.
+    // You use the users own words to describe what they are doing and feeling.
+    // You always answer is succinct sentances.`,
+    system: `
+    You are curious.
+    You record what are user is doing and feeling during their workday.
+    You do not offer advice, or any other kind of assistance.    
+    ALWAYS Respond with a succinct sentence.
+    Do not ask how you can assist the user.
+    Today is ${new Date().toDateString()}.
+    `,
     messages: convertToCoreMessages(messages),
     tools:{
       addEntry: tool({
@@ -29,13 +37,16 @@ export async function POST(req: Request) {
           feeling: z.string().describe('A description of how the user is feeling in their own words')
         })
       }),
-      getEntries: tool({
-        description:'returns an array of database records with information about what a user was doing, feeling, and the conditions at that time for analysis',
-        parameters: z.object({}),
-        execute: async () => getUserEntries()
+      getUserEntriesByDate: tool({
+        description:'returns an array of user entries with information about what a user was doing, feeling, for a specified date range',
+        parameters: z.object({
+          startDate: z.string().describe('The start date of the range of entries to return'),
+          endDate: z.string().describe('The end date of the range of entries to return')
+        }),
+        execute: async ({startDate, endDate}) => getUserEntries(startDate, endDate)
       })
     }
   });
 
-  return result.toDataStreamResponse();
+  return result.toDataStreamResponse(); 
 }

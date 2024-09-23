@@ -5,7 +5,6 @@ import { CornerDownLeft, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UserMessage from "@/components/user-message";
 import AssistantMessage from "@/components/assistant-message";
-import AssistantTool from "@/components/assistant-tool";
 import AssistantAddEntry from "@/components/assistant-add-entry";
 import { useState } from "react";
 

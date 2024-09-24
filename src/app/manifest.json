@@ -1,6 +1,7 @@
 {
   "name": "Work Makes Me Feel",
   "short_name": "workmakesmefeel",
+  "start_url":"/",
   "icons": [
     {
       "src": "/favicon.ico",

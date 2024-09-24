@@ -8,14 +8,15 @@
       "purpose": "maskable"
     },
     {
-      "src": "/icon-medium.png",
-      "sizes": "256x256",
+      "src": "/icon-1024x1024.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icon-high.svg",
-      "sizes": "257x257",
+      "src": "/icon-1024x1024.svg",
+      "sizes": "1024x1024",
+      "type": "image/svg+xml",
       "purpose": "maskable"
     }
   ],

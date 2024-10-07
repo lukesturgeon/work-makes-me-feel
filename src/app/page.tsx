@@ -1,34 +1,7 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import Chat from "@/components/chat";
-import DataViz from '@/components/data-viz';
-
-
-
-export default async function Page() {
-  const supabase = createClient()
-
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/login')
-  }
-
+export default function Page() {
   return (
-
-    <div className='flex'>
-
-      <aside className='fixed hidden lg:block w-1/2 flex-grow h-screen bg-primary text-primary-foreground '>
-
-        <DataViz />
-
-      </aside>
-
-      <main className='lg:ml-auto w-full lg:w-1/2 min-h-screen'>
-
-        <Chat />
-
-      </main>
-
+    <div className="p-6 h-full flex flex-col justify-end">
+      <p>WORK MAKES ME FEEL started as a project exploring data input and output exclusively through a text-based interface. It has since evolved into a digital playground that allows users to interact with data in a variety of ways. It is a place of happy mistakes, wonder and occasional disappointment.</p>
     </div>
   );
 }

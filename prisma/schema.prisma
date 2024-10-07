@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model entries {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  created_at      DateTime @db.Date
+  doing           String
+  feeling         String
+  sentiment_score Int
+  embedding       Float[]
+  user_id         String  
+}

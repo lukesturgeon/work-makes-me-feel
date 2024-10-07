@@ -6,14 +6,10 @@ import { Button } from "@/components/ui/button";
 import UserMessage from "@/components/user-message";
 import AssistantMessage from "@/components/assistant-message";
 import AssistantAddEntry from "@/components/assistant-add-entry";
-import { useState } from "react";
-
 
 export default function Chat() {
 
-const [isThinking, setIsThinking] = useState(false);
-
-  const { messages, input, handleInputChange, handleSubmit, addToolResult } = useChat({
+  const { isLoading, messages, input, handleInputChange, handleSubmit, addToolResult, append } = useChat({
     maxToolRoundtrips: 2,
     onToolCall({ toolCall, }) {
       if (toolCall.toolName === "getEntries") {
@@ -22,16 +18,20 @@ const [isThinking, setIsThinking] = useState(false);
           console.log(toolCall.result);
         }
       }
-    },
-    onResponse() {
-      setIsThinking(false);
     }
   });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsThinking(true);
     handleSubmit();
+  }
+
+  const onStartEntry = () => {
+    append({ role: "user", content: "Can I record a new entry?" });
+  }
+
+  const onQueryFeelings = () => {
+    append({ role: "user", content: "How has work been this week??" });
   }
 
   return (
@@ -59,16 +59,24 @@ const [isThinking, setIsThinking] = useState(false);
           </div>
         ))}
 
-        {isThinking && <div >
+        {isLoading && <div >
           <LoaderCircle className="animate-spin mr-2" />
         </div>}
 
       </div>
 
       <div className="p-6">
+
+        {messages.length == 0 && (
+          <div className="flex gap-2 py-6 justify-center">
+            <Button variant={"secondary"} onClick={onStartEntry}>Record an entry</Button>
+            <Button variant={"secondary"} onClick={onQueryFeelings}>How has work been this week?</Button>
+          </div>
+        )}
+
         <form
           onSubmit={onSubmit}
-          className="p-2 border rounded shadow-xl bg-background focus-within:ring-1 focus-within:ring-ring"
+          className="border rounded shadow-xl bg-background focus-within:ring-1 focus-within:ring-ring"
         >
           <div className="flex items-center p-2 gap-2">
             <input

@@ -2,7 +2,8 @@
 
 import { embed } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { createClient } from "@/lib/supabase/server";
+import prisma from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
 
 export const addUserEntry = async ({
   doing,
@@ -11,61 +12,69 @@ export const addUserEntry = async ({
   doing: string;
   feeling: string;
 }) => {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("no user id");
+    return "No user found";
+  }
+
   // create the entry text in a useful format
   const entryText = `Doing: ${doing}\nFeeling:${feeling}`;
 
-  const embedding = await getEmbedding(entryText);
+  const embedding = (await getEmbedding(entryText)) as number[];
 
   const sentiment = getSentiment(entryText);
 
-  // connect to supabase and save all the data
-  const supabase = createClient();
+  try {
+    await prisma.entries.create({
+      data: {
+        doing: doing,
+        feeling: feeling,
+        sentiment_score: sentiment.score as number,
+        embedding: embedding,
+        created_at: new Date(),
+        user_id: userId,
+      },
+    });
 
-  const { error } = await supabase.from("entries").insert({
-    doing: doing,
-    feeling: feeling,
-    sentiment_score: sentiment.score,
-    embedding: JSON.stringify(embedding),
-  });
-
-  if (error) {
-    return error.message;
+    return "Entry Saved.";
+  } catch (e: unknown) {
+    return "There was an error: " + (e as Error).message;
   }
-
-  return "Entry Saved.";
 };
 
-export const getUserEntries = async (startDateStr: string, endDateStr: string) => {
+export const getUserEntries = async (
+  userId: string,
+  startDateStr: string,
+  endDateStr: string
+) => {
   const startDate = new Date(startDateStr);
   const endDate = new Date(endDateStr);
   endDate.setHours(23, 59, 59, 999);
 
+  console.log(
+    `getUserEntries for ${userId} between ${startDateStr} and ${endDateStr}`
+  );
+
   try {
-    const supabase = createClient();
+    const entries = await prisma.entries.findMany({
+      select: {
+        doing: true,
+        feeling: true,
+        created_at: true,
+        sentiment_score: true,
+      },
+      where: {
+        user_id: userId,
+        created_at: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
 
-    // Get the logged in user with the current existing session
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) throw new Error("No user found");
-
-    // Get this user’s entries
-    const { data, error } = await supabase
-      .from("entries")
-      .select(
-        `doing, feeling, created_at, sentiment_score`
-      )
-      .eq("user_id", user.id)
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString())
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error('error', error);      
-      return error.message;
-    }    
-
-    return data;
+    return entries;
   } catch (e: unknown) {
     return "There was an error: " + (e as Error).message;
   }

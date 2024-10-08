@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma generate",
+    "lint": "next lint",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"    
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.58",
